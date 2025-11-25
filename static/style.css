@@ -1,0 +1,374 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh;
+  padding: 20px;
+  color: #333;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+header {
+  text-align: center;
+  color: white;
+  margin-bottom: 40px;
+}
+
+header h1 {
+  font-size: 2.5rem;
+  margin-bottom: 10px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+header p {
+  font-size: 1.1rem;
+  opacity: 0.9;
+}
+
+/* Upload Section */
+.upload-section {
+  background: white;
+  border-radius: 20px;
+  padding: 40px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  margin-bottom: 30px;
+}
+
+.upload-box {
+  border: 3px dashed #667eea;
+  border-radius: 15px;
+  padding: 60px 40px;
+  text-align: center;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  background: #f8f9fa;
+}
+
+.upload-box:hover,
+.upload-box.dragover {
+  background: #e8eaf6;
+  border-color: #764ba2;
+  transform: translateY(-5px);
+}
+
+.upload-icon {
+  width: 80px;
+  height: 80px;
+  color: #667eea;
+  margin-bottom: 20px;
+}
+
+.upload-content h3 {
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.upload-content p {
+  color: #666;
+  margin-bottom: 20px;
+}
+
+.browse-btn {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  padding: 12px 30px;
+  border-radius: 25px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+}
+
+.browse-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
+}
+
+.file-name {
+  display: none;
+  margin: 20px 0;
+  padding: 15px;
+  background: #e8f5e9;
+  border-radius: 10px;
+  color: #2e7d32;
+  font-weight: 500;
+}
+
+.upload-btn {
+  width: 100%;
+  padding: 15px;
+  background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.upload-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(46, 204, 113, 0.4);
+}
+
+.upload-btn:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+/* Loader */
+.loader {
+  border: 3px solid #f3f3f3;
+  border-top: 3px solid #667eea;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Results Section */
+.results-section {
+  background: white;
+  border-radius: 20px;
+  padding: 40px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  margin-top: 30px;
+}
+
+.results-section h2 {
+  color: #667eea;
+  margin-bottom: 30px;
+  font-size: 2rem;
+  text-align: center;
+}
+
+.result-card {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 30px;
+  border-radius: 15px;
+  text-align: center;
+  margin-bottom: 30px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.result-card h3 {
+  margin-bottom: 15px;
+  font-size: 1.3rem;
+  opacity: 0.9;
+}
+
+.emotion-badge {
+  display: inline-block;
+  padding: 15px 40px;
+  border-radius: 50px;
+  font-size: 2rem;
+  font-weight: bold;
+  background: white;
+  margin: 20px 0;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.emotion-badge.angry {
+  color: #e74c3c;
+}
+
+.emotion-badge.happy {
+  color: #2ecc71;
+}
+
+.emotion-badge.neutral {
+  color: #95a5a6;
+}
+
+.emotion-badge.sad {
+  color: #3498db;
+}
+
+.confidence {
+  font-size: 1.2rem;
+  margin-top: 15px;
+}
+
+.stats {
+  margin-top: 15px;
+}
+
+.stats p {
+  font-size: 1.1rem;
+  margin: 10px 0;
+}
+
+/* Image Comparison */
+.image-comparison {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+  margin-top: 30px;
+}
+
+.image-box {
+  text-align: center;
+}
+
+.image-box h4 {
+  margin-bottom: 15px;
+  color: #667eea;
+  font-size: 1.2rem;
+}
+
+.image-box img {
+  width: 100%;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Emotion Distribution */
+.emotion-distribution {
+  margin: 30px 0;
+}
+
+.emotion-distribution h3 {
+  color: #667eea;
+  margin-bottom: 20px;
+  font-size: 1.5rem;
+}
+
+.chart {
+  background: #f8f9fa;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.bar-container {
+  margin-bottom: 20px;
+}
+
+.bar-label {
+  font-weight: 600;
+  margin-bottom: 5px;
+  color: #333;
+}
+
+.bar-wrapper {
+  background: #e0e0e0;
+  border-radius: 10px;
+  height: 30px;
+  overflow: hidden;
+  margin-bottom: 5px;
+}
+
+.bar {
+  height: 100%;
+  border-radius: 10px;
+  transition: width 0.5s ease;
+  display: flex;
+  align-items: center;
+  padding-left: 10px;
+  color: white;
+  font-weight: 600;
+}
+
+.bar-value {
+  color: #666;
+  font-size: 0.9rem;
+}
+
+/* Video Player */
+.video-player {
+  margin-top: 30px;
+}
+
+.video-player h4 {
+  color: #667eea;
+  margin-bottom: 15px;
+  font-size: 1.3rem;
+}
+
+.video-player video {
+  width: 100%;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Reset Button */
+.reset-btn {
+  width: 100%;
+  padding: 15px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 30px;
+}
+
+.reset-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
+/* Error Message */
+.error-message {
+  background: #ffebee;
+  color: #c62828;
+  padding: 20px;
+  border-radius: 10px;
+  margin-top: 20px;
+  border-left: 5px solid #c62828;
+  font-weight: 500;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  header h1 {
+    font-size: 2rem;
+  }
+
+  .upload-section,
+  .results-section {
+    padding: 20px;
+  }
+
+  .image-comparison {
+    grid-template-columns: 1fr;
+  }
+
+  .upload-box {
+    padding: 40px 20px;
+  }
+
+  .emotion-badge {
+    font-size: 1.5rem;
+    padding: 10px 30px;
+  }
+}

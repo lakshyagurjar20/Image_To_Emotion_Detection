@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Emotion Detection - Image & Video Analysis</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}"
+    />
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1>🎭 Emotion Detection System</h1>
+        <p>
+          Upload an image or video to detect emotions based on pose analysis
+        </p>
+      </header>
+
+      <div class="upload-section">
+        <div class="upload-box" id="uploadBox">
+          <input
+            type="file"
+            id="fileInput"
+            accept=".jpg,.jpeg,.png,.mp4,.avi,.mov,.mkv"
+            hidden
+          />
+          <div class="upload-content">
+            <svg
+              class="upload-icon"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="17 8 12 3 7 8"></polyline>
+              <line x1="12" y1="3" x2="12" y2="15"></line>
+            </svg>
+            <h3>Drop your file here or click to browse</h3>
+            <p>Supported formats: JPG, PNG, MP4, AVI, MOV, MKV</p>
+            <button
+              class="browse-btn"
+              onclick="document.getElementById('fileInput').click()"
+            >
+              Browse Files
+            </button>
+          </div>
+        </div>
+
+        <div id="fileName" class="file-name"></div>
+
+        <button id="uploadBtn" class="upload-btn" disabled>
+          <span class="btn-text">Analyze Emotion</span>
+          <span class="loader" style="display: none"></span>
+        </button>
+      </div>
+
+      <div id="results" class="results-section" style="display: none">
+        <h2>Analysis Results</h2>
+
+        <div id="imageResults" class="result-content" style="display: none">
+          <div class="result-card">
+            <h3>Detected Emotion</h3>
+            <div class="emotion-badge" id="emotionBadge">-</div>
+            <div class="confidence">
+              <span>Confidence: </span>
+              <strong id="confidenceValue">0%</strong>
+            </div>
+          </div>
+
+          <div class="image-comparison">
+            <div class="image-box">
+              <h4>Original</h4>
+              <img id="originalImage" src="" alt="Original" />
+            </div>
+            <div class="image-box">
+              <h4>Processed</h4>
+              <img id="processedImage" src="" alt="Processed" />
+            </div>
+          </div>
+        </div>
+
+        <div id="videoResults" class="result-content" style="display: none">
+          <div class="result-card">
+            <h3>Dominant Emotion</h3>
+            <div class="emotion-badge" id="dominantEmotion">-</div>
+            <div class="stats">
+              <p>
+                <strong>Total Frames:</strong> <span id="totalFrames">0</span>
+              </p>
+            </div>
+          </div>
+
+          <div class="emotion-distribution">
+            <h3>Emotion Distribution</h3>
+            <div class="chart" id="emotionChart"></div>
+          </div>
+
+          <div class="video-player">
+            <h4>Processed Video</h4>
+            <video id="processedVideo" controls>
+              <source id="videoSource" src="" type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
+          </div>
+        </div>
+
+        <button class="reset-btn" onclick="location.reload()">
+          Analyze Another File
+        </button>
+      </div>
+
+      <div id="error" class="error-message" style="display: none"></div>
+    </div>
+
+    <script>
+      const uploadBox = document.getElementById("uploadBox");
+      const fileInput = document.getElementById("fileInput");
+      const fileName = document.getElementById("fileName");
+      const uploadBtn = document.getElementById("uploadBtn");
+      const results = document.getElementById("results");
+      const error = document.getElementById("error");
+      let selectedFile = null;
+
+      // Drag and drop
+      uploadBox.addEventListener("dragover", (e) => {
+        e.preventDefault();
+        uploadBox.classList.add("dragover");
+      });
+
+      uploadBox.addEventListener("dragleave", () => {
+        uploadBox.classList.remove("dragover");
+      });
+
+      uploadBox.addEventListener("drop", (e) => {
+        e.preventDefault();
+        uploadBox.classList.remove("dragover");
+        const files = e.dataTransfer.files;
+        if (files.length > 0) {
+          handleFileSelect(files[0]);
+        }
+      });
+
+      // File input
+      fileInput.addEventListener("change", (e) => {
+        if (e.target.files.length > 0) {
+          handleFileSelect(e.target.files[0]);
+        }
+      });
+
+      function handleFileSelect(file) {
+        const validTypes = [
+          "image/jpeg",
+          "image/png",
+          "image/jpg",
+          "video/mp4",
+          "video/avi",
+          "video/quicktime",
+          "video/x-matroska",
+        ];
+
+        if (!validTypes.includes(file.type)) {
+          showError(
+            "Invalid file type. Please upload JPG, PNG, MP4, AVI, MOV, or MKV files."
+          );
+          return;
+        }
+
+        selectedFile = file;
+        fileName.textContent = `Selected: ${file.name} (${(
+          file.size /
+          1024 /
+          1024
+        ).toFixed(2)} MB)`;
+        fileName.style.display = "block";
+        uploadBtn.disabled = false;
+        error.style.display = "none";
+      }
+
+      uploadBtn.addEventListener("click", async () => {
+        if (!selectedFile) return;
+
+        const formData = new FormData();
+        formData.append("file", selectedFile);
+
+        // Show loader
+        uploadBtn.disabled = true;
+        document.querySelector(".btn-text").textContent = "Analyzing...";
+        document.querySelector(".loader").style.display = "inline-block";
+        error.style.display = "none";
+
+        try {
+          const response = await fetch("/upload", {
+            method: "POST",
+            body: formData,
+          });
+
+          const data = await response.json();
+
+          if (data.success) {
+            displayResults(data);
+          } else {
+            showError(data.error || "An error occurred during processing.");
+          }
+        } catch (err) {
+          showError("Failed to connect to server. Please try again.");
+        } finally {
+          uploadBtn.disabled = false;
+          document.querySelector(".btn-text").textContent = "Analyze Emotion";
+          document.querySelector(".loader").style.display = "none";
+        }
+      });
+
+      function displayResults(data) {
+        results.style.display = "block";
+        results.scrollIntoView({ behavior: "smooth" });
+
+        if (data.type === "image") {
+          document.getElementById("imageResults").style.display = "block";
+          document.getElementById("videoResults").style.display = "none";
+
+          document.getElementById("emotionBadge").textContent = data.emotion;
+          document.getElementById(
+            "emotionBadge"
+          ).className = `emotion-badge ${data.emotion.toLowerCase()}`;
+          document.getElementById(
+            "confidenceValue"
+          ).textContent = `${data.confidence.toFixed(1)}%`;
+
+          // Show images
+          const originalUrl = URL.createObjectURL(selectedFile);
+          document.getElementById("originalImage").src = originalUrl;
+          document.getElementById(
+            "processedImage"
+          ).src = `/processed/${data.output_file}`;
+        } else if (data.type === "video") {
+          document.getElementById("imageResults").style.display = "none";
+          document.getElementById("videoResults").style.display = "block";
+
+          document.getElementById("dominantEmotion").textContent =
+            data.dominant_emotion;
+          document.getElementById(
+            "dominantEmotion"
+          ).className = `emotion-badge ${data.dominant_emotion.toLowerCase()}`;
+          document.getElementById("totalFrames").textContent =
+            data.total_frames;
+
+          // Display emotion distribution
+          displayEmotionChart(data.emotion_distribution, data.total_frames);
+
+          // Show video
+          document.getElementById(
+            "videoSource"
+          ).src = `/processed/${data.output_file}`;
+          document.getElementById("processedVideo").load();
+        }
+      }
+
+      function displayEmotionChart(distribution, total) {
+        const chart = document.getElementById("emotionChart");
+        chart.innerHTML = "";
+
+        const emotions = ["Angry", "Happy", "Neutral", "Sad"];
+        const colors = {
+          Angry: "#e74c3c",
+          Happy: "#2ecc71",
+          Neutral: "#95a5a6",
+          Sad: "#3498db",
+        };
+
+        emotions.forEach((emotion) => {
+          const count = distribution[emotion] || 0;
+          const percentage = ((count / total) * 100).toFixed(1);
+
+          const barContainer = document.createElement("div");
+          barContainer.className = "bar-container";
+
+          const label = document.createElement("div");
+          label.className = "bar-label";
+          label.textContent = emotion;
+
+          const barWrapper = document.createElement("div");
+          barWrapper.className = "bar-wrapper";
+
+          const bar = document.createElement("div");
+          bar.className = "bar";
+          bar.style.width = `${percentage}%`;
+          bar.style.backgroundColor = colors[emotion];
+
+          const value = document.createElement("div");
+          value.className = "bar-value";
+          value.textContent = `${percentage}% (${count} frames)`;
+
+          barWrapper.appendChild(bar);
+          barContainer.appendChild(label);
+          barContainer.appendChild(barWrapper);
+          barContainer.appendChild(value);
+          chart.appendChild(barContainer);
+        });
+      }
+
+      function showError(message) {
+        error.textContent = message;
+        error.style.display = "block";
+        error.scrollIntoView({ behavior: "smooth" });
+      }
+    </script>
+  </body>
+</html>
