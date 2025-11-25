@@ -1,4 +1,4 @@
-# 🎭 Emotion Detection Web Application
+# Emotion Detection Web Application
 
 A modern Flask-based web application for detecting emotions from images and videos using pose analysis with **MediaPipe** and **Machine Learning**.
 
@@ -9,31 +9,31 @@ A modern Flask-based web application for detecting emotions from images and vide
 
 ---
 
-## ✨ Features
+## Features
 
-- 🖼️ **Image Analysis** - Upload images to detect emotions based on body pose
-- 🎥 **Video Processing** - Frame-by-frame emotion detection with real-time analysis
-- 📊 **Emotion Distribution** - Detailed statistics and visualization for video analysis
-- 🎨 **Modern UI** - Beautiful, responsive web interface with drag-and-drop support
-- ⚡ **Real-time Processing** - Fast emotion detection with pose landmarks visualization
-- 📈 **Confidence Scores** - Get prediction confidence for each detection
+- **Image Analysis** - Upload images to detect emotions based on body pose
+- **Video Processing** - Frame-by-frame emotion detection with real-time analysis
+- **Emotion Distribution** - Detailed statistics and visualization for video analysis
+- **Modern UI** - Beautiful, responsive web interface with drag-and-drop support
+- **Real-time Processing** - Fast emotion detection with pose landmarks visualization
+- **Confidence Scores** - Get prediction confidence for each detection
 
 ---
 
-## 🎯 Supported Emotions
+## Supported Emotions
 
 The system can detect four primary emotions:
 
-| Emotion     | Icon | Description                        |
-| ----------- | ---- | ---------------------------------- |
-| **Angry**   | 😠   | Aggressive or tense body posture   |
-| **Happy**   | 😊   | Open, relaxed, and positive stance |
-| **Neutral** | 😐   | Balanced and calm posture          |
-| **Sad**     | 😢   | Slumped or withdrawn body language |
+| Emotion     | Description                        |
+| ----------- | ---------------------------------- |
+| **Angry**   | Aggressive or tense body posture   |
+| **Happy**   | Open, relaxed, and positive stance |
+| **Neutral** | Balanced and calm posture          |
+| **Sad**     | Slumped or withdrawn body language |
 
 ---
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Prerequisites
 
@@ -75,7 +75,7 @@ http://localhost:5000
 
 ---
 
-## 💻 Usage Guide
+## Usage Guide
 
 ### Upload an Image
 
@@ -107,7 +107,7 @@ Visit `http://localhost:5000` in your browser.
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 Shiv_project/
@@ -121,29 +121,13 @@ Shiv_project/
 ├── static/
 │   └── style.css                   # Styling
 ├── uploads/                        # User uploaded files (auto-created)
-├── emotion_classifier_rf.pkl       # ⚠️ PLACEHOLDER - Replace with trained model
-└── scaler.pkl                      # ⚠️ PLACEHOLDER - Replace with trained scaler
+├── emotion_classifier_rf.pkl       # Trained model
+└── scaler.pkl                      # Trained scaler
 ```
 
 ---
 
-## 🎯 Features
-
-- **Image Analysis**: Upload images for single emotion prediction
-- **Video Processing**: Frame-by-frame emotion detection in videos
-- **Pose Visualization**: Real-time MediaPipe landmark drawing
-- **Statistics Dashboard**: Emotion distribution charts for videos
-
-### Detected Emotions:
-
-- 0: Angry
-- 1: Happy
-- 2: Neutral
-- 3: Sad
-
----
-
-## 📊 Training Data Requirements
+## Training Data Requirements
 
 Your H5 files must contain:
 
@@ -153,17 +137,28 @@ Your H5 files must contain:
 
 ---
 
-## 🐛 Troubleshooting
+## Troubleshooting
 
 ### Error: "Model not loaded"
 
-**Cause:** Placeholder models are being used or models are missing.
+**Cause:** Models are missing or not properly generated.
 
-**Solution:** Train your own models using the notebook in Google Colab (see Step 1 above).
+**Solution:** Run `python create_placeholder_models.py` to generate the required model files.
+
+### Port Already in Use
+
+```bash
+# Change port in app.py
+app.run(port=5001)
+```
+
+### Video Processing Issues
+
+- Ensure **ffmpeg** is installed on your system
+- Check video codec compatibility
+- Try converting video to MP4 format
 
 ### Low Accuracy
-
-**Cause:** Using placeholder models or insufficient training data.
 
 **Solution:**
 
@@ -173,19 +168,7 @@ Your H5 files must contain:
 
 ---
 
-## 💡 Why Placeholder Models?
-
-The actual trained models require:
-
-- Large training datasets (H5 files with pose data)
-- GPU compute power for training
-- Personal/proprietary data that cannot be shared publicly
-
-Therefore, this repo includes minimal placeholder models. **You must train your own** for the app to work properly.
-
----
-
-## 🤝 Contributing
+## Contributing
 
 Contributions are welcome! Feel free to:
 
@@ -197,19 +180,19 @@ Contributions are welcome! Feel free to:
 
 ---
 
-## 📝 License
+## License
 
 This project is created for educational purposes.
 
 ---
 
-## 👨‍💻 Author
+## Author
 
-Created with ❤️ using **MediaPipe**, **scikit-learn**, and **Flask**
+Created using **MediaPipe**, **scikit-learn**, and **Flask**
 
 ---
 
-## 🌟 Acknowledgments
+## Acknowledgments
 
 - **MediaPipe** by Google for pose detection
 - **Flask** community for excellent documentation
@@ -217,8 +200,6 @@ Created with ❤️ using **MediaPipe**, **scikit-learn**, and **Flask**
 
 ---
 
-## 📧 Support
+## Support
 
 For questions or issues, please open an issue in the GitHub repository.
-
-**Happy Emotion Detecting! 🎭✨**
